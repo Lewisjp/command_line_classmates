@@ -19,6 +19,14 @@ class Scraper
 #		all_the_h3s = @html.search("h3") #variable stores search results
 #		all_the_h3s.text # returns the varaible with the text method on it # you can reformat the string elsewhere 
 		students = html.search("div.face.front h3").to_s().split("</h3>").each {|x| x.slice!(0..3) }
+#            names = Array.new
+#alt method: all_the_h3s = @html.search("h3")  #with class and inspect you saw it starts as an array
+#            all_the_h3s.each do |h3|
+#            names << h3.text
+#			 end
+#			 names
+# !! you can use .map or .collect  on line 24 insteadof each # they automatically create a new array and return it ,
+
 	end
 
 
@@ -43,7 +51,19 @@ class Scraper
 		blog_uri = all_the_blogs.to_s().split(" ").select { |x| blog_uri << x if x.include?("href")}
 		blog_uri.each {|x| x.slice!(0..4) }  #removes the "href from each element
 	end
+# all_the_blogs = @html.search("a.blog").collect {|anchor| anchor["href"]}
 
+# Interest of time see kates code 
+
+# ALT:
+# 	all_the_blogs = @html.search("a.blog")
+# 	all_the_blogs.each do |anchor|
+
+
+
+# 		blogs << anchor.text
+# 	end
+# 	blogs
 
 end
 
