@@ -1,4 +1,5 @@
 require_relative '../lib/*'
+require 'launchy'
 
 class Student 
 
@@ -24,3 +25,7 @@ class Student
 	# end
 
 end
+
+test = Student.new(http://flatironschool-bk.herokuapp.com/)
+
+puts all_data

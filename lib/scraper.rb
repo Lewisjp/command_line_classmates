@@ -4,73 +4,71 @@ require 'nokogiri' # used for @html = Nokogiri::HTML(download) to interpret the 
 
 class Scraper
 
-	attr_reader :html # so you can view the data
+        attr_reader :html # so you can view the data
 
-	def initialize(url)
-		download = open(url)  # goes to the site and grabs stuff to be stored in download
-		# Nokogiri is a class, here we're going insite it as if it was a folder # no @ because we're not saving it
-		@html = Nokogiri::HTML(download) # translates the html so ruby can understand it, @ beccause we're saving it 
-	end
+        def initialize(url)
+                download = open(url)  # goes to the site and grabs stuff to be stored in download
+                # Nokogiri is a class, here we're going insite it as if it was a folder # no @ because we're not saving it
+                @html = Nokogiri::HTML(download) # translates the html so ruby can understand it, @ beccause we're saving it 
+        end
 
 
-	def get_student_names
-		#location of the student names 
-#		@html = html.search("h3")  #could use an instance variable #here h3 gets all the names 
-#		all_the_h3s = @html.search("h3") #variable stores search results
-#		all_the_h3s.text # returns the varaible with the text method on it # you can reformat the string elsewhere 
-		students = html.search("div.face.front h3").to_s().split("</h3>").each {|x| x.slice!(0..3) }
-#            names = Array.new
-#alt method: all_the_h3s = @html.search("h3")  #with class and inspect you saw it starts as an array
-#            all_the_h3s.each do |h3|
-#            names << h3.text
-#			 end
-#			 names
+        def get_student_names
+           	names = Array.new
+ 			all_the_h3s = @html.search("h3")  #with class and inspect you saw it starts as an array
+           	all_the_h3s.each do |h3|
+           		names << h3.text
+            end
+            names
 # !! you can use .map or .collect  on line 24 insteadof each # they automatically create a new array and return it ,
 
-	end
+        end
 
 
-	def get_twitter_names
-		t_names = Array.new
-		#location of the student names 
-#		@html = html.search("h3")  #could use an instance variable #here h3 gets all the names 
-		all_the_twitters = @html.search(".social") #variable stores search results
-		all_the_twitters.text.split(" ").each { |i| t_names << i if i.start_with?("@") } # returns the varaible with the text method on it # you can reformat the string elsewhere 
-		t_names
-#  .each do { |i| t_names << i if i.start_with?("@") }
-# TODO: comment out the all the methods 
-	end
+        def get_twitter_names
+            t_names = Array.new
 
-	def get_blog_websites
-		blog_uri = Array.new
-		#location of the student names 
-#		@html = html.search("h3")  #could use an instance variable #here h3 gets all the names 
-		all_the_blogs = @html.search("a.blog") #variable stores search results
-		# => <a class="blog" href="http://lewisjp.blog.com/" target="_blank">Blog</a> #etc 
-# 		all_the_blogs.class  #=> Nokogiri::XML::NodeSet
-		blog_uri = all_the_blogs.to_s().split(" ").select { |x| blog_uri << x if x.include?("href")}
-		blog_uri.each {|x| x.slice!(0..4) }  #removes the "href from each element
-	end
-# all_the_blogs = @html.search("a.blog").collect {|anchor| anchor["href"]}
+            all_the_twitters = html.search(".back").each do |i|  # <div class='face back'>
+            	if i.search(".twitter").text.strip[0]=="@" 
+            		# class='twitter'
+            		# Returns a copy of str with leading and trailing whitespace removed.
+            		# "    hello    ".strip   #=> "hello"
+            		t_names << i.search(".twitter").text.strip 
+            	else
+            		t_names << "Does not Twitter."
+            	end
+            end
+            t_names
 
-# Interest of time see kates code 
-
-# ALT:
-# 	all_the_blogs = @html.search("a.blog")
-# 	all_the_blogs.each do |anchor|
+        end
 
 
+        def get_github
+            all_the_gits = html.search("a").text.split(" ").reject! {|i| i == "Blog" || i.include?("@")} 
+        end
 
-# 		blogs << anchor.text
-# 	end
-# 	blogs
+        def get_blog_websites
+	            blog_uri = Array.new
+	       		html.search(".back").each do |blog_check|
+		      	if blog_check.search("a.blog").text == "Blog"
+		        	blog_uri << blog_check.search("a.blog")[0]["href"]
+		     	else
+		        	blog_uri << "none"
+		      	end
+		    end
+		    blog_uri
+
+        end
+
+
+
 
 end
 
 
 #gives us an object, - what kind?
-my_scrapper = Scraper.new("http://flatironschool-bk.herokuapp.com") 
-puts my_scrapper.get_student_names.inspect #calls the method get_student_names from the scrapper that has data
-my_scrapper.get_blog_websites
-my_scrapper.get_twitter_names
-# when ran in cmd line, it'll pause because its downloading from the site
+ #my_scrapper = Scraper.new("http://flatironschool-bk.herokuapp.com") 
+# puts my_scrapper.get_student_names.length
+# puts my_scrapper.get_twitter_names.length
+# puts my_scrapper.get_blog_websites.length
+ #puts my_scrapper.get_github
