@@ -25,18 +25,24 @@ class App
 		num = gits.length
 		the_git = gits[rand(num)]
 		Launchy.open("https://github.com/#{the_git}")
+
+		class_contents
 	end
 
 	def random_blog
 		num = blogs.length
 		the_blog = blogs[rand(num)]
 		Launchy.open("#{the_blog}")
+
+		class_contents
 	end
 
 	def random_twitter
 		num = twitter.length
 		the_twitter = twitter[rand(num)]
 		Launchy.open("https://twitter.com/#{the_twitter.delete "@"}")
+
+		class_contents
 	end
 
 	def display_students
@@ -46,18 +52,28 @@ class App
 
 
 	def student_profile(select_student_answer)
+		location = names.index("#{select_student_answer}")
+		puts "\n  Twitter: #{twitter[location]}\n  Blog: #{blogs[location]}\n\n"
 
+		done_now = gets.chomp
 		class_contents
 	end
 
-
+	# needs to make interface more flexible 
 	def select_student
-		puts "Enter 1 for student list, or enter the student's full name."
-		select_student_answer = gets.chomp.to_s.downcase
+		puts "Enter 1 for student list, or enter the student's full name.\n To return to the main menu enter 'back'"
+		select_student_answer = gets.chomp.to_s
 		case select_student_answer
 		when "1" then display_students
+		when "back" then class_contents
+		when "Back" then class_contents
+		when "BACK" then class_contents
 		else
-			student_profile(select_student_answer)
+			if names.include?("#{select_student_answer}")
+				student_profile(select_student_answer)
+			else
+				select_student
+			end
 		end
 
 	end
