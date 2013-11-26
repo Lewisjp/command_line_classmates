@@ -1,11 +1,13 @@
 require './lib/scraper.rb'
-#require './lib/*'
+require './lib/student.rb'
 require 'launchy'
 
 class App
 
+	attr_accessor :names, :twitter, :blogs, :gits
+
 	def initialize 
-		@student_scraper = Scraper.new("http://flatironschool-bk.herokuapp.com")
+		student_scraper = Scraper.new("http://flatironschool-bk.herokuapp.com")
 
 		@names = student_scraper.get_student_names
 		@twitter = student_scraper.get_twitter_names
@@ -14,27 +16,27 @@ class App
 
 		@students = Array.new
 		28.times do |i|
-			students << Student.new(names[i],twitters[i],blogs[i])
+			@students << Student.new(names[i],twitter[i],blogs[i])
 		end
-		students
+		@students
 	end
 
 	def random_git
 		num = gits.length
 		the_git = gits[rand(num)]
-		Launchy.open("http://https://github.com/#{the_git}")
+		Launchy.open("https://github.com/#{the_git}")
 	end
 
 	def random_blog
 		num = blogs.length
 		the_blog = blogs[rand(num)]
-		Launchy.open("the_blog")
+		Launchy.open("#{the_blog}")
 	end
 
 	def random_twitter
 		num = twitter.length
 		the_twitter = twitter[rand(num)]
-		Launchy.open("the_twitter")
+		Launchy.open("https://twitter.com/#{the_twitter.delete "@"}")
 	end
 
 	def display_students
@@ -43,14 +45,8 @@ class App
 	end
 
 
-	def student_profile(profile)
-		arr_index = 0
-		names.each | student |
-			if student == profile
-				arr_index = names.index("profile")
-			end
-		end
-		puts "#{profile}\nTwitter: #{twitter[arr_index]}\nBlog: #{blogs[arr_index]}"
+	def student_profile(select_student_answer)
+
 		class_contents
 	end
 
@@ -60,7 +56,6 @@ class App
 		select_student_answer = gets.chomp.to_s.downcase
 		case select_student_answer
 		when "1" then display_students
-
 		else
 			student_profile(select_student_answer)
 		end
@@ -76,7 +71,7 @@ class App
 		when 3 then random_git
 		when 4 then random_twitter
 		when 5 then random_blog
-		when 6 then break
+		when 6 then puts "Have a good day."
 		else
 			class_contents
 		end
@@ -103,4 +98,4 @@ class App
 end
 
 open_book = App.new
-open_book.random_git
+open_book.welcome_message

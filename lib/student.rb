@@ -1,5 +1,5 @@
-require_relative '../lib/*'
-require 'launchy'
+# require_relative '../lib/*'
+# require 'launchy'
 
 class Student 
 
@@ -18,14 +18,5 @@ class Student
 		all_data
 	end
 
-	#assuming we have a value for each category for each student
-	# def by_name_get_twitter
-
-
-	# end
-
 end
 
-test = Student.new(http://flatironschool-bk.herokuapp.com/)
-
-puts all_data
